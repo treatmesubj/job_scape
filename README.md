@@ -1,4 +1,4 @@
-# job\_scape
+# job\_scrape
 
 Scrape recommended remote jobs from [LinkedIn](https://www.linkedin.com) and [Builtin](https://builtin.com/)
 and write out results to CSV files.\
