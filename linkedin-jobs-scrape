@@ -82,6 +82,7 @@ if __name__ == "__main__":
             post_csv = f'"{company_name}", "{job_title}", "{job_apply_url}"'
             print(f"[{job_num}]: {post_csv}")
 
+            os.makedirs(os.path.dirname('./data/'), exist_ok=True)
             with open("./data/linkedin-jobs.csv", "a") as f:
                 f.write(f"{post_csv}\n")
 
