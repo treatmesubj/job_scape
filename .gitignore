@@ -3,4 +3,4 @@ cacert.pem
 *.der
 *.pfx
 *.crt
-*.csv
+data/**
