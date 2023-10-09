@@ -30,6 +30,6 @@ $ ./builtin-jobs-scrape -j 5 -s 60
 # Friendly Application Platforms
 ```
 https://grnh.se
-https://greenhouse.io
-https://www.lever.co/
+https://app.greenhouse.io
+https://jobs.lever.co/
 ```
