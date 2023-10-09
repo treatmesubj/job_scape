@@ -42,7 +42,6 @@ if __name__ == "__main__":
             ].keys()
         ]
         job_ids = [key.split("(")[-1].split(",")[0] for key in job_keys]
-        # print(f"{job_ids=}")
 
         for id in job_ids:
             job_id_url = f"https://www.linkedin.com/jobs/search/?currentJobId={id}"

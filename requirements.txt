@@ -1,3 +1,2 @@
 beautifulsoup4
 browser_cookie3
-requests_html
