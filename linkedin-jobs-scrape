@@ -23,7 +23,7 @@ if __name__ == "__main__":
         "-s",
         action="store",
         type=int,
-        default=60,
+        default=0,
         help="int, number of seconds to sleep between each job-scrape",
     )
     args = parser.parse_args()
