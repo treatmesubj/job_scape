@@ -26,3 +26,10 @@ $ ./builtin-jobs-scrape -j 5 -s 60
 [4]: "Block", "COM Compliance Specialist, Cash App", "https://www.smartrecruiters.com/Square/67890bfa-cc06-4fd3-b864-a64896f9c293?trid=3d4e5ece-fa6a-4ee3-821c-26c11ac9645b", "https://builtin.com/job/finance/com-compliance-specialist-cash-app/2069431"
 [5]: "Optum", "Associate Director Network Contracting - Remote in New York", "https://ad.doubleclick.net/ddm/clk/564543718;373569178;b?https://careers.unitedhealthgroup.com/job/19236829/associate-director-network-contracting-remote-in-new-york-remote/?src=JB-22390&utm_source=builtin.com&utm_medium=job_posting&utm_campaign=Optum_NA_Non_Clinical&utm_content=niche_site&utm_term=373569178&ss=paid/", "https://builtin.com/job/operations/associate-director-network-contracting-remote-new-york/2069451"
 ```
+---
+# Friendly Application Platforms
+```
+https://grnh.se
+https://greenhouse.io
+https://www.lever.co/
+```
