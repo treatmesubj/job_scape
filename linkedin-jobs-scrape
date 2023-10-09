@@ -76,9 +76,12 @@ if __name__ == "__main__":
                 raise Exception(f"{job_id_url}, no apply URL?")
 
             job_title = sanjay["data"]["title"]
-            company_name = sanjay["included"][1]["name"]
+            try:
+                company_name = sanjay["included"][1]["name"]
+            except IndexError:
+                company_name: "None"
 
-            post_csv = f'"{company_name}", "{job_title}", "{job_apply_url}"'
+            post_csv = f'"{company_name}", "{job_title}", "{job_apply_url}", "{job_id_url}"'
             print(f"[{job_num}]: {post_csv}")
 
             os.makedirs(os.path.dirname('./data/'), exist_ok=True)

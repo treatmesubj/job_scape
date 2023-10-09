@@ -15,9 +15,4 @@ options:
 
 ```
 $ ./builtin-jobs-scrape -j 5
-[0]: "Databricks", "Solutions Architect - Financial Services", "https://databricks.com/company/careers/open-positions/job?gh_jid=5898639002&gh_src=62a881d62"
-[1]: "Affirm", "Quantitative Markets Analytics Lead", "https://boards.greenhouse.io/affirm/jobs/5714618003?gh_src=689c81d53us"
-[2]: "Swish Analytics", "Sports Data Scientist", "https://grnh.se/34b9c6cc5us?source=LinkedIn"
-[3]: "PDW", "Director of Strategic Accounts - Army", "https://www.linkedin.com/jobs/search/?currentJobId=3733131500"
-[4]: "General Dynamics Information Technology", "Cloud FinOps Analyst Expert", "https://gdit.wd5.myworkdayjobs.com/External_Career_Site/job/Any-Location--Remote/Cloud-FinOps-Analyst-Expert_RQ158987?source=Internet_LinkedIn"
 ```

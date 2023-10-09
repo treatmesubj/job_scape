@@ -53,7 +53,7 @@ if __name__ == "__main__":
                 "div[class*='apply-job-form'] div[data-path]"
             )["data-path"]
 
-            post_csv = f'"{company_name}", "{job_title}", "{job_apply_url}"'
+            post_csv = f'"{company_name}", "{job_title}", "{job_apply_url}", "{builtin_apply_url}"'
             print(f"[{job_num}]: {post_csv}")
 
             os.makedirs(os.path.dirname('./data/'), exist_ok=True)
