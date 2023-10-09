@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import browser_cookie3
 import argparse
+import time
 
 
 if __name__ == "__main__":
@@ -16,6 +17,14 @@ if __name__ == "__main__":
         type=int,
         default=20,
         help="int, number of jobs to scrape",
+    )
+    parser.add_argument(
+        "--sleeptime",
+        "-s",
+        action="store",
+        type=int,
+        default=60,
+        help="int, number of seconds to sleep between each job-scrape",
     )
     args = parser.parse_args()
 
@@ -81,11 +90,14 @@ if __name__ == "__main__":
             except IndexError:
                 company_name: "None"
 
-            post_csv = f'"{company_name}", "{job_title}", "{job_apply_url}", "{job_id_url}"'
+            post_csv = (
+                f'"{company_name}", "{job_title}", "{job_apply_url}", "{job_id_url}"'
+            )
             print(f"[{job_num}]: {post_csv}")
 
-            os.makedirs(os.path.dirname('./data/'), exist_ok=True)
+            os.makedirs(os.path.dirname("./data/"), exist_ok=True)
             with open("./data/linkedin-jobs.csv", "a") as f:
                 f.write(f"{post_csv}\n")
 
             job_num += 1
+            time.sleep(args.sleeptime)

@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import browser_cookie3
 import argparse
+import time
 
 
 if __name__ == "__main__":
@@ -16,6 +17,14 @@ if __name__ == "__main__":
         type=int,
         default=20,
         help="int, number of jobs to scrape",
+    )
+    parser.add_argument(
+        "--sleeptime",
+        "-s",
+        action="store",
+        type=int,
+        default=60,
+        help="int, number of seconds to sleep between each job-scrape",
     )
     args = parser.parse_args()
 
@@ -49,16 +58,24 @@ if __name__ == "__main__":
             )
 
             soup = BeautifulSoup(response_builtin_job.text, "html.parser")
-            job_apply_url = soup.select_one(
-                "div[class*='apply-job-form'] div[data-path]"
-            )["data-path"]
+            try:
+                job_apply_url = soup.select_one(
+                    "div[class*='apply-job-form'] div[data-path]"
+                )["data-path"]
+            except Exception as e:
+                print(
+                    "Built In is likely rate-limiting you; courteously try sleeping for 60 seconds between scrapes"
+                )
+                raise e
 
             post_csv = f'"{company_name}", "{job_title}", "{job_apply_url}", "{builtin_apply_url}"'
             print(f"[{job_num}]: {post_csv}")
 
-            os.makedirs(os.path.dirname('./data/'), exist_ok=True)
+            os.makedirs(os.path.dirname("./data/"), exist_ok=True)
             with open("./data/builtin-jobs.csv", "a") as f:
                 f.write(f"{post_csv}\n")
 
             job_num += 1
+            time.sleep(args.sleeptime)
+
         page_num += 1
