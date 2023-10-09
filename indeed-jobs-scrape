@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+import os
+import json
+import requests
+from bs4 import BeautifulSoup
+import browser_cookie3
+import argparse
+import time
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--jobs",
+        "-j",
+        action="store",
+        type=int,
+        default=20,
+        help="int, number of jobs to scrape",
+    )
+    parser.add_argument(
+        "--sleeptime",
+        "-s",
+        action="store",
+        type=int,
+        default=0,
+        help="int, number of seconds to sleep between each job-scrape",
+    )
+    parser.add_argument(
+        "--outset",
+        "-o",
+        action="store",
+        type=int,
+        default=0,
+        help="int, job index to start scraping at",
+    )
+    args = parser.parse_args()
+
+    # cookiejar = browser_cookie3.load()  # all browsers
+    cookiejar = browser_cookie3.firefox()
+
+    job_num = args.outset
+    while job_num < (args.outset + args.jobs):
+        response_jobs = requests.get(
+            f"https://www.indeed.com/jobs?l=Saint+Paul%252C+MN&sc=0kf%253Aattr(DSQF7)%253B&radius=100&start={args.outset}",
+            cookies=cookiejar,
+            allow_redirects=True,
+        )
+
+        soup = BeautifulSoup(response_jobs.text, "html.parser")
+
+        jobs_elems = soup.select("td.resultContent")
+
+        for e in jobs_elems:
+            try:
+                assert job_num < (args.outset + args.jobs), "done"
+            except AssertionError:
+                break
+            company_name = elem.select_one("span.companyName").text
+            job_title = elem.select_one("span[id^='jobTitle']").text
+            indeed_apply_url = (
+                "https://www.indeed.com" + elem.select_one("a[id^='job']")["href"]
+            )
+
+
+            response_indeed_job = requests.get(
+                indeed_apply_url,
+                cookies=cookiejar,
+                allow_redirects=True,
+            )
+
+            soup = BeautifulSoup(response_indeed_job.text, "html.parser")
+            job_apply_url = soup.select_one(
+                "button[contenthtml='Apply now']"
+            )["href"]
+
+            post_csv = f'"{company_name}","{job_title}","{job_apply_url}"'
+            print(f"[{job_num}]: {post_csv}")
+
+            os.makedirs(os.path.dirname("./data/"), exist_ok=True)
+            with open("./data/indeed-jobs.csv", "a") as f:
+                f.write(f"{post_csv}\n")
+
+            job_num += 1
+            time.sleep(args.sleeptime)
