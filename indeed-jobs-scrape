@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import browser_cookie3
 import argparse
 import time
+from fake_useragent import UserAgent
 
 
 if __name__ == "__main__":
@@ -36,20 +37,27 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+    headers = {
+       "User-Agent": str(UserAgent().random),
+    }
+    session = requests.session()
     # cookiejar = browser_cookie3.load()  # all browsers
     cookiejar = browser_cookie3.firefox()
+    breakpoint()
 
     job_num = args.outset
     while job_num < (args.outset + args.jobs):
-        response_jobs = requests.get(
+        response_jobs = session.get(
             f"https://www.indeed.com/jobs?l=Saint+Paul%252C+MN&sc=0kf%253Aattr(DSQF7)%253B&radius=100&start={args.outset}",
             cookies=cookiejar,
             allow_redirects=True,
+            headers=headers,
         )
 
         soup = BeautifulSoup(response_jobs.text, "html.parser")
 
         jobs_elems = soup.select("td.resultContent")
+        assert len(jobs_elems) > 0, "no jobs elems"
 
         for e in jobs_elems:
             try:
@@ -63,16 +71,18 @@ if __name__ == "__main__":
             )
 
 
-            response_indeed_job = requests.get(
+            response_indeed_job = session.get(
                 indeed_apply_url,
                 cookies=cookiejar,
                 allow_redirects=True,
+                headers=headers,
             )
 
             soup = BeautifulSoup(response_indeed_job.text, "html.parser")
             job_apply_url = soup.select_one(
                 "button[contenthtml='Apply now']"
             )["href"]
+            assert job_apply_url is not None, "no url"
 
             post_csv = f'"{company_name}","{job_title}","{job_apply_url}"'
             print(f"[{job_num}]: {post_csv}")
