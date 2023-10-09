@@ -103,7 +103,7 @@ if __name__ == "__main__":
                 company_name: "None"
 
             post_csv = (
-                f'"{company_name}", "{job_title}", "{job_apply_url}", "{job_id_url}"'
+                f'"{company_name}","{job_title}","{job_apply_url}","{job_id_url}"'
             )
             print(f"[{job_num}]: {post_csv}")
 
