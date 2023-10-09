@@ -26,14 +26,22 @@ if __name__ == "__main__":
         default=60,
         help="int, number of seconds to sleep between each job-scrape",
     )
+    parser.add_argument(
+        "--outset",
+        "-o",
+        action="store",
+        type=int,
+        default=0,
+        help="int, job index to start scraping at",
+    )
     args = parser.parse_args()
 
     # cookiejar = browser_cookie3.load()  # all browsers
     cookiejar = browser_cookie3.firefox()
 
-    job_num = 0
-    page_num = 1
-    while job_num < args.jobs:
+    job_num = args.outset
+    page_num = int(args.outset / 10)
+    while job_num < (args.outset + args.jobs):
         response_jobs = requests.get(
             f"https://builtin.com/jobs/remote&page={page_num}",
             cookies=cookiejar,
@@ -45,6 +53,10 @@ if __name__ == "__main__":
         job_post_elems = soup.select("[id^='job-card']")
 
         for elem in job_post_elems:
+            try:
+                assert job_num < (args.outset + args.jobs), "done"
+            except AssertionError:
+                break
             company_name = elem.select_one("div[data-id] span").text
             job_title = elem.select_one("[href^='/job/']").text
             builtin_apply_url = (

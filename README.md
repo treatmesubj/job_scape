@@ -6,13 +6,15 @@ Assumes you've recently used a local web-browser to log in; uses those cookies.
 
 ```
 $ ./linkedin-jobs-scrape -h
-usage: linkedin-jobs-scrape [-h] [--jobs JOBS] [--sleeptime SLEEPTIME]
+usage: linkedin-jobs-scrape [-h] [--jobs JOBS] [--sleeptime SLEEPTIME] [--outset OUTSET]
 
 options:
   -h, --help            show this help message and exit
   --jobs JOBS, -j JOBS  int, number of jobs to scrape
   --sleeptime SLEEPTIME, -s SLEEPTIME
                         int, number of seconds to sleep between each job-scrape
+  --outset OUTSET, -o OUTSET
+                        int, job index to start scraping at
 ```
 
 ```

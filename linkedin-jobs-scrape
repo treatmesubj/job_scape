@@ -26,13 +26,21 @@ if __name__ == "__main__":
         default=0,
         help="int, number of seconds to sleep between each job-scrape",
     )
+    parser.add_argument(
+        "--outset",
+        "-o",
+        action="store",
+        type=int,
+        default=0,
+        help="int, job index to start scraping at",
+    )
     args = parser.parse_args()
 
     # cookiejar = browser_cookie3.load()  # all browsers
     cookiejar = browser_cookie3.firefox()
 
-    job_num = 0
-    while job_num < args.jobs:
+    job_num = args.outset
+    while job_num < (args.outset + args.jobs):
         response_jobs = requests.get(
             f"https://www.linkedin.com/jobs/search/?keywords=&location=United States&f_TPR=&f_WT=2&start={job_num}",
             cookies=cookiejar,
@@ -53,6 +61,10 @@ if __name__ == "__main__":
         job_ids = [key.split("(")[-1].split(",")[0] for key in job_keys]
 
         for id in job_ids:
+            try:
+                assert job_num < (args.outset + args.jobs), "done"
+            except AssertionError:
+                break
             job_id_url = f"https://www.linkedin.com/jobs/search/?currentJobId={id}"
             response_job = requests.get(
                 job_id_url,
