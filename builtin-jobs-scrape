@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
         soup = BeautifulSoup(response_jobs.text, "html.parser")
 
-        job_post_elems = soup.select("[id^='job-card']")
+        job_post_elems = soup.select("div[id^='job-card']")
 
         for elem in job_post_elems:
             try:
