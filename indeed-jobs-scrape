@@ -59,7 +59,7 @@ if __name__ == "__main__":
         jobs_elems = soup.select("td.resultContent")
         assert len(jobs_elems) > 0, "no jobs elems"
 
-        for e in jobs_elems:
+        for elem in jobs_elems:
             try:
                 assert job_num < (args.outset + args.jobs), "done"
             except AssertionError:

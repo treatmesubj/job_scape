@@ -84,7 +84,7 @@ if __name__ == "__main__":
             print(f"[{job_num}]: {post_csv}")
 
             os.makedirs(os.path.dirname("./data/"), exist_ok=True)
-            with open("./data/builtin-jobs.csv", "a") as f:
+            with open("./data/builtin-jobs.csv", "a", encoding="utf-8") as f:
                 f.write(f"{post_csv}\n")
 
             job_num += 1
