@@ -83,7 +83,9 @@ if __name__ == "__main__":
                 except KeyError:
                     pass
             else:
-                raise Exception(f"{id} job is weird")
+                # raise Exception(f"{id}, no apply method found")
+                print(f"{id}, no apply method found")
+                continue  # just go to next job
 
             if "companyApplyUrl" in job_apply_method.keys():
                 job_apply_url = job_apply_method["companyApplyUrl"]  # company site
@@ -108,7 +110,7 @@ if __name__ == "__main__":
             print(f"[{job_num}]: {post_csv}")
 
             os.makedirs(os.path.dirname("./data/"), exist_ok=True)
-            with open("./data/linkedin-jobs.csv", "a") as f:
+            with open("./data/linkedin-jobs.csv", "a", encoding="utf-8") as f:
                 f.write(f"{post_csv}\n")
 
             job_num += 1
