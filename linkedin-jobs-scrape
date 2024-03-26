@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 import os
+import subprocess
 import json
 import requests
 from bs4 import BeautifulSoup
 import browser_cookie3
+import glob
 import argparse
 import time
 
@@ -37,7 +39,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # cookiejar = browser_cookie3.load()  # all browsers
-    cookiejar = browser_cookie3.firefox()
+    # if WSL, use Windows Firefox cookies
+    kernel = subprocess.check_output(["uname", "-a"]).decode().strip().lower()
+    if any(str in kernel for str in ["microsoft", "wsl"]):
+        user = subprocess.check_output(["powershell.exe", "$Env:UserName"]).decode().strip()
+        ff_profile = browser_cookie3.FirefoxBased.get_default_profile(
+            f"/mnt/c/Users/{user}/AppData/Roaming/Mozilla/Firefox"
+        )
+        cookie_file = glob.glob(os.path.join(ff_profile, "cookies.sqlite"))[0]
+        cookiejar = browser_cookie3.firefox(cookie_file=cookie_file)
+    else:
+        cookiejar = browser_cookie3.firefox()
 
     if not os.path.exists('./data/linkedin-jobs.csv'):
         os.makedirs(os.path.dirname("./data/"), exist_ok=True)
@@ -80,6 +92,7 @@ if __name__ == "__main__":
             soup = BeautifulSoup(response_job.text, "html.parser")
             job_post_elems = soup.select("[id^='bpr-guid']")
 
+            # apply URL
             for elem in job_post_elems:
                 try:
                     sanjay = json.loads(elem.text)
@@ -91,7 +104,6 @@ if __name__ == "__main__":
                 # raise Exception(f"{id}, no apply method found")
                 print(f"{id}, no apply method found")
                 continue  # just go to next job
-
             if "companyApplyUrl" in job_apply_method.keys():
                 job_apply_url = job_apply_method["companyApplyUrl"]  # company site
             elif "easyApplyUrl" in job_apply_method.keys():  # LinkedIn Easy-Apply
@@ -103,11 +115,14 @@ if __name__ == "__main__":
             else:
                 raise Exception(f"{job_id_url}, no apply URL?")
 
+            # job title
             job_title = sanjay["data"]["title"]
-            try:
+
+            # company name
+            if "companyName" in sanjay["data"]["companyDetails"].keys():
+                company_name = sanjay["data"]["companyDetails"]["companyName"]
+            else:
                 company_name = sanjay["included"][1]["name"]
-            except IndexError:
-                company_name: "None"
 
             post_csv = (
                 f'"{company_name}","{job_title}","{job_apply_url}","{job_id_url}"'
