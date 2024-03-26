@@ -44,6 +44,10 @@ if __name__ == "__main__":
     # cookiejar = browser_cookie3.load()  # all browsers
     cookiejar = browser_cookie3.firefox()
     breakpoint()
+    if not os.path.exists('./data/indeed-jobs.csv'):
+        os.makedirs(os.path.dirname("./data/"), exist_ok=True)
+        with open("./data/indeed-jobs.csv", "a", encoding="utf-8") as f:
+            f.write(f"company_name, job_title, job_apply_url, job_id_url\n")
 
     job_num = args.outset
     while job_num < (args.outset + args.jobs):
@@ -87,7 +91,6 @@ if __name__ == "__main__":
             post_csv = f'"{company_name}","{job_title}","{job_apply_url}"'
             print(f"[{job_num}]: {post_csv}")
 
-            os.makedirs(os.path.dirname("./data/"), exist_ok=True)
             with open("./data/indeed-jobs.csv", "a", encoding="utf-8") as f:
                 f.write(f"{post_csv}\n")
 

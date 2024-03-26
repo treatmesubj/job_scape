@@ -39,6 +39,11 @@ if __name__ == "__main__":
     # cookiejar = browser_cookie3.load()  # all browsers
     cookiejar = browser_cookie3.firefox()
 
+    if not os.path.exists('./data/linkedin-jobs.csv'):
+        os.makedirs(os.path.dirname("./data/"), exist_ok=True)
+        with open("./data/linkedin-jobs.csv", "a", encoding="utf-8") as f:
+            f.write(f"company_name, job_title, job_apply_url, job_id_url\n")
+
     job_num = args.outset
     while job_num < (args.outset + args.jobs):
         response_jobs = requests.get(
@@ -109,7 +114,6 @@ if __name__ == "__main__":
             )
             print(f"[{job_num}]: {post_csv}")
 
-            os.makedirs(os.path.dirname("./data/"), exist_ok=True)
             with open("./data/linkedin-jobs.csv", "a", encoding="utf-8") as f:
                 f.write(f"{post_csv}\n")
 
