@@ -21,6 +21,12 @@ if __name__ == "__main__":
         help="int, number of jobs to scrape",
     )
     parser.add_argument(
+        "--remote-collection",
+        "-rc",
+        action="store_true",
+        help="results from LinkedIn remote jobs collection",
+    )
+    parser.add_argument(
         "--sleeptime",
         "-s",
         action="store",
@@ -56,10 +62,15 @@ if __name__ == "__main__":
         with open("./data/linkedin-jobs.csv", "a", encoding="utf-8") as f:
             f.write(f"company_name, job_title, job_apply_url, job_id_url\n")
 
+    if args.remote_collection:
+        job_list_url = "https://www.linkedin.com/jobs/collections/remote-jobs/?"
+    else:
+        job_list_url = "https://www.linkedin.com/jobs/search/?keywords=&location=United States&f_TPR=&f_WT=2&"
+
     job_num = args.outset
     while job_num < (args.outset + args.jobs):
         response_jobs = requests.get(
-            f"https://www.linkedin.com/jobs/search/?keywords=&location=United States&f_TPR=&f_WT=2&start={job_num}",
+            f"{job_list_url}start={job_num}",
             cookies=cookiejar,
             allow_redirects=True,
         )
@@ -69,12 +80,20 @@ if __name__ == "__main__":
         jobs_elem = soup.select("[id^='bpr-guid']")[-1]
 
         sanjay = json.loads(jobs_elem.text)
-        job_keys = [
-            key
-            for key in sanjay["data"]["metadata"]["jobCardPrefetchQueries"][0][
-                "prefetchJobPostingCard"
-            ].keys()
-        ]
+        if args.remote_collection:
+            job_keys = [
+                key
+                for key in sanjay['data']['data']['jobsDashJobCardsByJobCollections']['metadata']["jobCardPrefetchQueries"][0][
+                    "*prefetchJobPostingCard"
+                ]
+            ]
+        else:
+            job_keys = [
+                key
+                for key in sanjay["data"]["metadata"]["jobCardPrefetchQueries"][0][
+                    "prefetchJobPostingCard"
+                ].keys()
+            ]
         job_ids = [key.split("(")[-1].split(",")[0] for key in job_keys]
 
         for id in job_ids:
